@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => 'auth'], function () {
+    // Author Route
+    Route::get('/author', [App\Http\Controllers\AuthorsController::class, 'index'])->name('author');
+    // Book Route
+    Route::get('/book', [App\Http\Controllers\BooksController::class, 'index'])->name('book');
+    Route::get('/author/view/{id}', [App\Http\Controllers\AuthorsController::class, 'show'])->name('author.view');
 });
